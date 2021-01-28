@@ -65,7 +65,7 @@ public class Application {
     // }
 
     Random r = new Random();
-    Int i = r.nextInt(100);
+    int i = r.nextInt(100);
 
     if(i <= 20) {
       return "T";
