@@ -56,33 +56,64 @@ public class Application {
   @PostMapping("/**")
   public String index(@RequestBody ArenaUpdate arenaUpdate) {
     System.out.println(arenaUpdate);
-    String[] commands = new String[]{"F", "R", "L", "T"};
 
-    // Iterator<Map.Entry<String, PlayerState>> stateIt = map.entrySet().iterator();
-    // while (stateIt.hasNext()) {
-    //   Map.Entry<String, PlayerState> playerState = stateIt.next();
-      
-    // }
+    // Get self state
+    String selfKey = arenaUpdate._links.self.href;
+    PlayerState selfState = arenaUpdate.arena.state.get(selfKey);
 
-    Random r = new Random();
-    int i = r.nextInt(100);
+    // Create Iterator
+    Iterator<Map.Entry<String, PlayerState>> stateIt = arenaUpdate.arena.state.entrySet().iterator();
 
-    if(i <= 20) {
-      return "T";
+    // Iterate through map to see other player positions
+    while (stateIt.hasNext()) {
+      Map.Entry<String, PlayerState> playerState = stateIt.next();
+
+      // Skip if it's your own player
+      if (playerState.getKey().equals(selfKey)) {
+        continue;
+      }
+
+      // Check if player is in your row/col
+      int posX = playerState.getValue().x;
+      int posY = playerState.getValue().y;
+
+      // Same Column(x)
+      if ((posX == selfState.x) && (Math.abs(posY - selfState.y) <=3)) {
+        // Check if same direction
+        if (selfState.direction.equals("N")) {
+          if (posY < selfState.y) {
+            // Shoot water
+            return "T";
+          }
+        }
+        else if (selfState.direction.equals("S")) {
+          if (posY > selfState.y) {
+            return "T";
+          }
+        }
+      }
+
+      // Same Row(y)
+      if ((posY == selfState.y) && (Math.abs(posX - selfState.x) <=3)) {
+        // Check if same direction
+        if (selfState.direction.equals("W")) {
+          if (posX < selfState.x) {
+            return "T";
+          }
+        }
+        else if (selfState.direction.equals("E")) {
+          if (posX > selfState.x) {
+            return "T";
+          }
+        }
+      }
+
+      // Do something random if none of the conditions match
+      String[] commands = new String[]{"F", "R", "L"};
+      Random r = new Random();
+      int i = r.nextInt(3);
+      return i;
     }
-    else if(i > 20 && i <= 30) {
-      return "R";
-    }
-    else if(i > 30 && i <= 40) {
-      return "L";
-    }
-    else {
-      return "F";
-    }
-
-    // BANANA test
-
   }
-
 }
 
