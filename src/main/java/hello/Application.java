@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Iterator;
 
 @SpringBootApplication
 @RestController
@@ -107,13 +108,13 @@ public class Application {
           }
         }
       }
-
-      // Do something random if none of the conditions match
-      String[] commands = new String[]{"F", "R", "L"};
-      Random r = new Random();
-      int i = r.nextInt(3);
-      return i;
     }
+
+    // Do something random if none of the conditions match
+    String[] commands = new String[]{"F", "R", "L"};
+    Random r = new Random();
+    int i = r.nextInt(3);
+    return commands[i];
   }
 }
 
